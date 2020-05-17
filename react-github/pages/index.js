@@ -1,10 +1,21 @@
-import Link from 'next/Link'
-import { Button } from 'antd'
+import Link from 'next/link';
+import Router from 'next/router';
+import { Button } from 'antd';
 
-export default () => (
-  <Link href="/a" title="AAA">
-    <Button>index</Button>
-  </Link>
-)
+export default () => {
+  function gotoTestB(){
+    Router.push({
+      pathname: '/test/b',
+      query: {
+        id: 2
+      }
+    },'/test/b/2')
+  }
+
+  return (
+    <>
+      <span>Index</span>
+    </>)
+}
 
 // React.createElement('span', {}, 'Index')

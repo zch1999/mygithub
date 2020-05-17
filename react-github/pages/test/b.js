@@ -1,1 +1,1 @@
-export default  () => <p>b</p>
+export default () => <span>B</span>

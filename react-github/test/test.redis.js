@@ -1,14 +1,10 @@
-async function test(){
-  const Redis =require('ioredis')
+const Redis = require('ioredis');
 
-  const redis = new Redis({
-    port: 6379,
-    password: 123456
-  })
-  await redis.set('c',111)
-  const keys = await redis.keys('*')
+const redis = new Redis({
+  port: 6378,
+  password: 109872
+})
 
-  console.log(await redis.get('a'))
-}
-
-test()
+redis.keys('*').then(data => {
+  console.log("keys", data)
+})
