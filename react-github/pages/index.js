@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import Router from 'next/router';
 import { Button } from 'antd';
+import { connect } from 'react-redux'
 
-export default () => {
+import state from '../store/store'
+
+const Index =  ({ counter, username, rename, add}) => {
   function gotoTestB(){
     Router.push({
       pathname: '/test/b',
@@ -14,8 +17,22 @@ export default () => {
 
   return (
     <>
-      <span>Index</span>
+      <span>Count: {counter}</span>
+      <span>username: {username}</span>
+      <input value={username} onChange={(e) => rename(e.target.value) } />
+      <button onClick={ () => add(counter)} >add</button>
     </>)
 }
 
 // React.createElement('span', {}, 'Index')
+export default connect(function mapStateToProps(state) {
+  return {
+    counter: state.count.count,
+    username: state.user.username
+  }
+},function mapDispatchToProps(dispatch){
+  return {
+    add: (num) => dispatch({ type: 'ADD', num }),
+    rename: (name) => dispatch( {type: 'UPDATE_USERNAME', name})
+  }
+})(Index)
