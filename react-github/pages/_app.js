@@ -3,6 +3,7 @@ import App, { Container } from 'next/app'
 import 'antd/dist/antd.css'
 
 import Layout from '../components/layout'
+import MyContext from '../lib/my-context'
 
 class MyApp extends App {
 
@@ -23,7 +24,9 @@ class MyApp extends App {
     return (
       // <Container>
         <Layout>
-          <Component {...pageProps}/>
+          <MyContext.Provider value="test">
+           <Component {...pageProps}/>
+          </MyContext.Provider>
         </Layout>
       // </Container>
     )
