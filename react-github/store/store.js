@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
-
+import { composeWithDevTools } from 'redux-devtools-extension'
+ 
 const initialState = {
   count: 0
 }
@@ -9,7 +10,7 @@ const userInitialState = {
   username: 'zch1999'
 }
 
-function add(num){
+export function add(num){
   return {
     type: ADD,
     num,
@@ -40,14 +41,6 @@ const allReducer = combineReducers({
   count: counterReducer,
   user: userReducer
 })
-const store = createStore(
-  allReducer, 
-  {
-    count:initialState, 
-    user: userInitialState
-  },
-  applyMiddleware(ReduxThunk)
-)
 
 function addAsync(num){
   return (dispatch) => {
@@ -57,16 +50,27 @@ function addAsync(num){
   }
 }
 
-console.log(store.getState())
-store.dispatch(add(3))
-console.log(store.getState())
+// console.log(store.getState())
+// store.dispatch(add(3))
+// console.log(store.getState())
 
-store.subscribe(() => {
-  console.log('change',store.getState())
-})
+// store.subscribe(() => {
+//   console.log('change',store.getState())
+// })
 
-store.dispatch(addAsync(5))
-store.dispatch({type: UPDATE_USERNAME, name: 'zch1512'})
+// store.dispatch(addAsync(5))
+// store.dispatch({type: UPDATE_USERNAME, name: 'zch1512'})
 
 
-export default store
+export default function initializeStore(state) {
+  const store = createStore(
+    allReducer, 
+    Object.assign({}, {
+      count:initialState, 
+      user: userInitialState
+    }, state),
+    composeWithDevTools(applyMiddleware(ReduxThunk))
+  )
+
+  return store
+}

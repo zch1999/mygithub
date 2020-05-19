@@ -3,7 +3,7 @@ import Router from 'next/router';
 import { Button } from 'antd';
 import { connect } from 'react-redux'
 
-import state from '../store/store'
+import { add } from '../store/store'
 
 const Index =  ({ counter, username, rename, add}) => {
   function gotoTestB(){
@@ -22,6 +22,11 @@ const Index =  ({ counter, username, rename, add}) => {
       <input value={username} onChange={(e) => rename(e.target.value) } />
       <button onClick={ () => add(counter)} >add</button>
     </>)
+}
+
+Index.getInitialProps = async ({reduxStore}) => {
+  reduxStore.dispatch(add(3))
+  return {}
 }
 
 // React.createElement('span', {}, 'Index')

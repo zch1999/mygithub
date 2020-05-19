@@ -17,7 +17,10 @@
    - 各种hooks的使用方法及注意事项
    - hooks中存在的问题以及如何解决
   6. redux
-
+   - reducer
+    1. 不应该有任何副作用
+    2. 有任何的数据更新都应该返回新对象
+    3. 可以通过combineReducers进行合并
   nextjs带有服务器，但是只能处理ssr
 
 
