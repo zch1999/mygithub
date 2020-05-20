@@ -18,7 +18,7 @@ export function add(num){
 }
 const ADD = 'ADD'
 function counterReducer(state = initialState, action) {
-  console.log(state, action)
+  // console.log(state, action)
   switch (action.type) {
     case ADD:
       return { count: state.count + (action.num || 1)}

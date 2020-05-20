@@ -27,7 +27,7 @@ export default (Comp) => {
       // const name = name + '123'
       const { Component, pageProps, ...rest} = this.props
 
-      console.log(Component,pageProps)
+      // console.log(Component,pageProps)
       if(pageProps) {
         pageProps.test = '123'
       }

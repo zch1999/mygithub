@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import 'antd/dist/antd.css'
 
 import Layout from '../components/layout'
+import MyContext from '../lib/my-context'
 
 import testHoc from '../lib/with-redux'
 
@@ -28,7 +29,9 @@ class MyApp extends App {
       // <Container>
         <Layout>
           <Provider store={reduxStore}>
+            <MyContext.Provider value="test">
               <Component {...pageProps}/>
+            </MyContext.Provider>
           </Provider>
         </Layout>
       // </Container>
