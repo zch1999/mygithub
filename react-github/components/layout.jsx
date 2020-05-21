@@ -5,6 +5,7 @@ import { Button, Layout, Input, Avatar } from 'antd'
 import {GithubOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer } = Layout
+import Container from './Container'
 
 const githubIconStyle = {
   color: 'white',
@@ -16,8 +17,9 @@ const githubIconStyle = {
 
 const footerStyle = {
   textAlign: 'center'
-
 }
+
+const Comp = ({ color, children, style }) => <div style={{color, ...style}}>{children}</div>
 
 export default ({ children })=> {
 
@@ -35,7 +37,7 @@ export default ({ children })=> {
   return(
     <Layout>
       <Header>
-        <div className="header-inner">
+        <Container renderer={<div className="header-inner" />}>
           <div className="header-left">
             <div className="logo">
               <GithubOutlined  style={githubIconStyle}/>
@@ -55,9 +57,13 @@ export default ({ children })=> {
               {/* <UserOutlined style={{fontSize:'40px', color: 'white'}}/> */}
             </div>
           </div>
-        </div>
+        </Container>
       </Header>
-      <Content>{children}</Content>
+      <Content>
+        <Container >
+            {children}
+        </Container>
+      </Content>
       <Footer style={footerStyle}>
         Develop 
         <a href="1901394767@qq.com">zch1999</a>
@@ -71,13 +77,23 @@ export default ({ children })=> {
             display: flex;
             justify-content: flex-start;
           }
+          .content {
+            color: red;
+          }
         `}</style>
       <style jsx global>{`
         #__next{
           height: 100%
         }
         .ant-layout {
-          hright: 100%
+          min-height: 100%
+        }
+        .ant-layout-header {
+          padding-left: 0;
+          padding-right: 0;
+        }
+        .ant-layout-content {
+          background: #fff;
         }
       `}</style>
     </Layout>
