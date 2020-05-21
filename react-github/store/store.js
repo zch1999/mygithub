@@ -1,55 +1,44 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import axios from 'axios'
  
-const initialState = {
-  count: 0
-}
 
-const userInitialState = {
-  username: 'zch1999'
-}
+const userInitialState = {}
 
-export function add(num){
-  return {
-    type: ADD,
-    num,
-  }
-}
-const ADD = 'ADD'
-function counterReducer(state = initialState, action) {
-  // console.log(state, action)
-  switch (action.type) {
-    case ADD:
-      return { count: state.count + (action.num || 1)}
-    default: 
-      return state
-  }
-}
+const LOGOUT = 'LOGOUT'
 
-const UPDATE_USERNAME = 'UPDATE_USERNAME'
 function userReducer(state = userInitialState, action){
   switch (action.type) {
-    case UPDATE_USERNAME :
-      return { ...state, username: action.name}
+    case LOGOUT: {
+      return {}
+    }
     default :
       return state
   }
 }
 
 const allReducer = combineReducers({
-  count: counterReducer,
   user: userReducer
 })
 
-function addAsync(num){
-  return (dispatch) => {
-    setTimeout(() => {
-      dispatch(add(num))
-    }, 1000);
+//action 退出登录
+export function logout() {
+  return dispatch => {
+    axios.post('/logout')
+      .then(resp => {
+        if(resp.status == 200){
+          dispatch({
+            type: LOGOUT
+          })
+        }else {
+          console.log('logout fail',resp)
+        }
+      }).catch(err => {
+        console.log('logout fail',err)
+      })
   }
 }
-
 // console.log(store.getState())
 // store.dispatch(add(3))
 // console.log(store.getState())
@@ -65,8 +54,7 @@ function addAsync(num){
 export default function initializeStore(state) {
   const store = createStore(
     allReducer, 
-    Object.assign({}, {
-      count:initialState, 
+    Object.assign({}, { 
       user: userInitialState
     }, state),
     composeWithDevTools(applyMiddleware(ReduxThunk))

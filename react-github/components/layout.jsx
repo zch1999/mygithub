@@ -1,11 +1,16 @@
 import { useState, useCallback } from 'react'
-
+import getConfig from 'next/config'
 import Link from 'next/link'
-import { Button, Layout, Input, Avatar } from 'antd'
-import {GithubOutlined, UserOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux'
+import { Button, Layout, Input, Avatar, Tooltip, Dropdown, Menu } from 'antd'
+import { GithubOutlined, UserOutlined } from '@ant-design/icons';
+import { logout } from '../store/store'
+
+import Container from './Container'
 
 const { Header, Content, Footer } = Layout
-import Container from './Container'
+
+const { publicRuntimeConfig } = getConfig()
 
 const githubIconStyle = {
   color: 'white',
@@ -21,9 +26,7 @@ const footerStyle = {
 
 const Comp = ({ color, children, style }) => <div style={{color, ...style}}>{children}</div>
 
-export default ({ children })=> {
-
-
+function MyLayout ({ children, user, logout }) {
   const [search,setSearch] = useState('')
 
   const handleSearchChange = useCallback((event) => {
@@ -33,6 +36,20 @@ export default ({ children })=> {
   const handleOnSearch = useCallback(() => {
 
   },[])
+
+  const handleLogout = useCallback(() => {
+    logout()
+  },[])
+
+  const userDropDown = (
+    <Menu>
+      <Menu.Item>
+        <a href=""  onClick={handleLogout}>
+          退出登录
+        </a>
+      </Menu.Item>
+    </Menu>
+  )
 
   return(
     <Layout>
@@ -53,7 +70,21 @@ export default ({ children })=> {
           </div>
           <div className="header-right">
             <div className="user">
-              <Avatar size={40} icon={<UserOutlined />}/>
+              {
+                user && user.id ? (
+                  <Dropdown overlay={userDropDown}>
+                    <a href="/">
+                      <Avatar size={40} src={user.avatar_url}/>
+                    </a>
+                  </Dropdown>
+                ) : (
+                  <Tooltip title="点击登录">
+                    <a href={publicRuntimeConfig.OAUTH_URL}>
+                      <Avatar size={40} icon={<UserOutlined />}/>
+                    </a>
+                  </Tooltip>
+                )
+              }
               {/* <UserOutlined style={{fontSize:'40px', color: 'white'}}/> */}
             </div>
           </div>
@@ -99,3 +130,13 @@ export default ({ children })=> {
     </Layout>
   )
 }
+
+export default connect(function mapState(state) {
+  return {
+    user: state.user
+  }
+}, function mapReducer(dispatch) {
+  return {
+    logout: () => dispatch(logout())
+  }
+})(MyLayout)

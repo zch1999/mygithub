@@ -63,6 +63,7 @@ app.prepare().then(() => {
 
   server.use(async (ctx, next) => {
     // ctx.cookies.set('id', 'userid:sxxxxx')
+    ctx.req.session = ctx.session
     await handle(ctx.req, ctx.res)
     ctx.respond = false
     // next()
