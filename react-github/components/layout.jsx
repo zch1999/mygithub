@@ -5,8 +5,9 @@ import { connect } from 'react-redux'
 import { Button, Layout, Input, Avatar, Tooltip, Dropdown, Menu } from 'antd'
 import { GithubOutlined, UserOutlined } from '@ant-design/icons';
 import { logout } from '../store/store'
-
+import axios from 'axios'
 import Container from './Container'
+import { withRouter } from 'next/router'
 
 const { Header, Content, Footer } = Layout
 
@@ -26,7 +27,7 @@ const footerStyle = {
 
 const Comp = ({ color, children, style }) => <div style={{color, ...style}}>{children}</div>
 
-function MyLayout ({ children, user, logout }) {
+function MyLayout ({ children, user, logout, router }) {
   const [search,setSearch] = useState('')
 
   const handleSearchChange = useCallback((event) => {
@@ -39,7 +40,7 @@ function MyLayout ({ children, user, logout }) {
 
   const handleLogout = useCallback(() => {
     logout()
-  },[])
+  },[logout])
 
   const userDropDown = (
     <Menu>
@@ -51,13 +52,29 @@ function MyLayout ({ children, user, logout }) {
     </Menu>
   )
 
+  const handleGotoOAuth = useCallback((e) => {
+    e.preventDefault()
+    axios.get(`/prepare-auth?url=${router.asPath}`)
+      .then(resp => {
+        if(resp.status == 200){
+          location.href = publicRuntimeConfig.OAUTH_URL
+        }else {
+          console.log('prepare auth fail', resp)
+        }
+      }).catch(err => {
+        console.log('prepare auth fail', err)
+      })
+  },[])
+
   return(
     <Layout>
       <Header>
         <Container renderer={<div className="header-inner" />}>
           <div className="header-left">
             <div className="logo">
-              <GithubOutlined  style={githubIconStyle}/>
+              <Link href="/">
+                <GithubOutlined  style={githubIconStyle}/>
+              </Link>
             </div>
             <div>
               <Input.Search 
@@ -79,7 +96,7 @@ function MyLayout ({ children, user, logout }) {
                   </Dropdown>
                 ) : (
                   <Tooltip title="点击登录">
-                    <a href={publicRuntimeConfig.OAUTH_URL}>
+                    <a href={`/prepare-auth?url=${router.asPath}`} >
                       <Avatar size={40} icon={<UserOutlined />}/>
                     </a>
                   </Tooltip>
@@ -139,4 +156,4 @@ export default connect(function mapState(state) {
   return {
     logout: () => dispatch(logout())
   }
-})(MyLayout)
+})(withRouter(MyLayout))
